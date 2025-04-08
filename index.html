@@ -33,11 +33,11 @@
                 </div>
                 <hr />
                 <div class="list-group">
-                    <div class="list-group-item" v-for="(comment, index) in comments">
+                    <div class="list-group-item" v-for="(comment, index) in allComments">
                         <span>Author: <strong>{{comment.name}}</strong></span>
                         <p>{{comment.message}}</p>
                         <div>
-                            <a href="#" class="btn btn-danger" v-on:click="removeComment(index)">Deletar</a>
+                            <a href="#" class="btn btn-danger" v-on:click.prevent="removeComment(index)">Deletar</a>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
             },
             methods: {
                 addComment() {
-                    if (this.name.trim() === '' || this.message.trim() === '') {
+                    if (this.message.trim() === '') {
                         alert('Preencha os campos');
                         return;
                     }
@@ -66,7 +66,16 @@
                 removeComment(index) {
                     this.comments.splice(index, 1);
                 }
+            },
+            computed:{
+                allComments(){
+                    return this.comments.map(comment =>({
+                        ...comment,
+                        name: comment.name.trim() === '' ? 'Anônimo' : comment.name
+                    }))
+                }
             }
+
         });
 
         app.mount('#app');
